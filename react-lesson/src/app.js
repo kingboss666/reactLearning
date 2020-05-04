@@ -1,64 +1,66 @@
-console.log("js运行了");
-console.log(React);
-console.log(ReactDOM);
-
-let obj = {
-    title: "这是APP",
-    subtitle: "我是副标题",
-    options: [1]
-}
-const showOptions = (options) => {
-    if (options && options.length > 0) {
-        return <p>这是一个options</p>
-    } else {
-        return <p>没有东西</p>
+// 总组件
+class MyApp extends React.Component {
+    render() {
+        return (
+            <div>
+                <Heaber />
+                <Action />
+                <Options />
+                <AddOption />
+            </div>
+        )
     }
 }
-const template = (
-    <div>
-        <h1>{obj.title}</h1>
-        <p>{obj.subtitle}</p>
-        {(obj.options && obj.options.length) > 0 && <p>这是一个options</p>}
-        {showOptions(obj.options)}
-        <p>{(obj.options && obj.options.length > 0) ? "这是一个options" : "没有东西"}</p>
-        <ol>
-            <li>物品1</li>
-            <li>物品1</li>
-        </ol>
-    </div>
-)
 
-const templateTwo = (
-    <div>
-        <h1>金瑞</h1>
-        <p>age: 22</p>
-        <p>location: 杭州</p>
-    </div>
-)
+class Heaber extends React.Component {
+    render() {
+        return (
+            <div>
+                <h1>帮你做决定</h1>
+                <p>把你的命运交给电脑把</p>
+            </div>
+        )
+    }
+}
+class Action extends React.Component {
+    render() {
+        return (
+            <div>
+                <button>随机输出一个选项</button>
+            </div>
+        )
+    }
+}
+class Options extends React.Component {
+    render() {
+        return (
+            <div>
+                <Option />
+                <Option />
+                <Option />
+                <Option />
+            </div>
+        )
+    }
+}
+class Option extends React.Component {
+    render(){
+        return (
+            <div>
+                我是li
+            </div>
+        )
+    }
+}
+class AddOption extends React.Component {
+    render() {
+        return (
+            <div>
+                我是AddOption组件
+            </div>
+        )
+    }
+}
 
-let count = 0
-const countAdd = () => {
-    count += 1
-    renderCountApp();
-}
-const countRemove = () => {
-    count -= 1
-    renderCountApp();
-}
-const countReset = () => {
-    count = 0
-    renderCountApp();
-}
-const renderCountApp = () => {
-    const templateThree = (
-        <div>
-            <p>{count}</p>
-            <button className="button" onClick={countAdd}>+1</button>
-            <button className="button" onClick={countRemove}>-1</button>
-            <button className="button" onClick={countReset}>重置</button>
-        </div>
-    )
-    const root = document.getElementById("app");
-    ReactDOM.render(templateThree, root)
-}
-renderCountApp()
+const app = document.getElementById("app")
+ReactDOM.render(<MyApp />, app)
