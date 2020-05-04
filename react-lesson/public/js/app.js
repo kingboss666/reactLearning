@@ -10,9 +10,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -24,121 +24,197 @@ var MyApp =
 function (_React$Component) {
   _inherits(MyApp, _React$Component);
 
-  function MyApp() {
+  function MyApp(props) {
+    var _this;
+
     _classCallCheck(this, MyApp);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MyApp).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MyApp).call(this, props));
+    _this.handleRemoveAll = _this.handleRemoveAll.bind(_assertThisInitialized(_this));
+    _this.handlePickOption = _this.handlePickOption.bind(_assertThisInitialized(_this));
+    _this.handleAddOption = _this.handleAddOption.bind(_assertThisInitialized(_this));
+    _this.handleRemoveOption = _this.handleRemoveOption.bind(_assertThisInitialized(_this));
+    _this.state = {
+      options: props.options
+    };
+    return _this;
   }
 
   _createClass(MyApp, [{
+    key: "handleRemoveAll",
+    value: function handleRemoveAll() {
+      this.setState(function () {
+        return {
+          options: []
+        };
+      });
+    }
+  }, {
+    key: "handlePickOption",
+    value: function handlePickOption() {
+      var index = Math.floor(Math.random() * this.state.options.length);
+      var option = this.state.options[index];
+      alert(option);
+    }
+  }, {
+    key: "handleAddOption",
+    value: function handleAddOption(option) {
+      if (!option) {
+        return "选项不能为空";
+      } else if (this.state.options.includes(option)) {
+        return "不要输入重复的选项";
+      } else {
+        this.setState(function (prevState) {
+          return {
+            options: prevState.options.concat(option)
+          };
+        });
+      }
+    }
+  }, {
+    key: "handleRemoveOption",
+    value: function handleRemoveOption(option) {
+      this.setState(function (prevState) {
+        return {
+          options: prevState.options.filter(function (item) {
+            return item !== option;
+          })
+        };
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      try {
+        var json = localStorage.getItem("options");
+        var options = JSON.parse(json);
+
+        if (options) {
+          console.log(options);
+          this.setState(function () {
+            return {
+              options: options
+            };
+          });
+        }
+      } catch (e) {//什么都不做
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.state.options.length !== prevState.options.length) {
+        var json = JSON.stringify(this.state.options);
+        localStorage.setItem("options", json);
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", null, React.createElement(Heaber, null), React.createElement(Action, null), React.createElement(Options, null), React.createElement(AddOption, null));
+      var subTitle = "把你的命运交给电脑吧";
+      return React.createElement("div", null, React.createElement(Header, {
+        subTitle: subTitle
+      }), React.createElement(Action, {
+        hasOptions: this.state.options.length > 0,
+        handlePickOption: this.handlePickOption
+      }), React.createElement(Options, {
+        options: this.state.options,
+        handleRemoveAll: this.handleRemoveAll,
+        handleRemoveOption: this.handleRemoveOption
+      }), React.createElement(AddOption, {
+        handleAddOption: this.handleAddOption
+      }));
     }
   }]);
 
   return MyApp;
 }(React.Component);
 
-var Heaber =
-/*#__PURE__*/
-function (_React$Component2) {
-  _inherits(Heaber, _React$Component2);
+MyApp.defaultProps = {
+  options: []
+}; // 标题
 
-  function Heaber() {
-    _classCallCheck(this, Heaber);
+var Header = function Header(props) {
+  return React.createElement("div", null, React.createElement("h1", null, props.title), props.subTitle && React.createElement("h2", null, props.subTitle));
+};
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Heaber).apply(this, arguments));
-  }
+Header.defaultProps = {
+  title: "帮你做决定"
+}; // 随机选项
 
-  _createClass(Heaber, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", null, React.createElement("h1", null, "\u5E2E\u4F60\u505A\u51B3\u5B9A"), React.createElement("p", null, "\u628A\u4F60\u7684\u547D\u8FD0\u4EA4\u7ED9\u7535\u8111\u628A"));
+var Action = function Action(props) {
+  return React.createElement("div", null, React.createElement("button", {
+    onClick: props.handlePickOption,
+    disabled: !props.hasOptions
+  }, "\u968F\u673A\u8F93\u51FA\u4E00\u4E2A\u9009\u9879"));
+}; // 选项集合
+
+
+var Options = function Options(props) {
+  return React.createElement("div", null, React.createElement("button", {
+    onClick: props.handleRemoveAll
+  }, "\u5168\u90E8\u5220\u9664"), props.options.length === 0 && React.createElement("p", null, "\u8BF7\u6DFB\u52A0\u4E00\u4E2A\u9009\u9879"), props.options.map(function (item, index) {
+    return React.createElement(Option, {
+      option: item,
+      key: "option_".concat(index),
+      handleRemoveOption: props.handleRemoveOption
+    });
+  }));
+}; // 单个选项
+
+
+var Option = function Option(props) {
+  return React.createElement("div", null, props.option, React.createElement("button", {
+    onClick: function onClick() {
+      props.handleRemoveOption(props.option);
     }
-  }]);
+  }, "\u5220\u9664"));
+}; // 添加选项
 
-  return Heaber;
-}(React.Component);
-
-var Action =
-/*#__PURE__*/
-function (_React$Component3) {
-  _inherits(Action, _React$Component3);
-
-  function Action() {
-    _classCallCheck(this, Action);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Action).apply(this, arguments));
-  }
-
-  _createClass(Action, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", null, React.createElement("button", null, "\u968F\u673A\u8F93\u51FA\u4E00\u4E2A\u9009\u9879"));
-    }
-  }]);
-
-  return Action;
-}(React.Component);
-
-var Options =
-/*#__PURE__*/
-function (_React$Component4) {
-  _inherits(Options, _React$Component4);
-
-  function Options() {
-    _classCallCheck(this, Options);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Options).apply(this, arguments));
-  }
-
-  _createClass(Options, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", null, React.createElement(Option, null), React.createElement(Option, null), React.createElement(Option, null), React.createElement(Option, null));
-    }
-  }]);
-
-  return Options;
-}(React.Component);
-
-var Option =
-/*#__PURE__*/
-function (_React$Component5) {
-  _inherits(Option, _React$Component5);
-
-  function Option() {
-    _classCallCheck(this, Option);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(Option).apply(this, arguments));
-  }
-
-  _createClass(Option, [{
-    key: "render",
-    value: function render() {
-      return React.createElement("div", null, "\u6211\u662Fli");
-    }
-  }]);
-
-  return Option;
-}(React.Component);
 
 var AddOption =
 /*#__PURE__*/
-function (_React$Component6) {
-  _inherits(AddOption, _React$Component6);
+function (_React$Component2) {
+  _inherits(AddOption, _React$Component2);
 
-  function AddOption() {
+  function AddOption(props) {
+    var _this2;
+
     _classCallCheck(this, AddOption);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(AddOption).apply(this, arguments));
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(AddOption).call(this, props));
+    _this2.handleFormSubmit = _this2.handleFormSubmit.bind(_assertThisInitialized(_this2));
+    _this2.state = {
+      error: ""
+    };
+    return _this2;
   }
 
   _createClass(AddOption, [{
+    key: "handleFormSubmit",
+    value: function handleFormSubmit(e) {
+      e.preventDefault();
+      var option = e.target.elements.option.value.trim();
+      var error = this.props.handleAddOption(option);
+      this.setState(function () {
+        return {
+          error: error
+        };
+      });
+
+      if (!error) {
+        e.target.elements.option.value = "";
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return React.createElement("div", null, "\u6211\u662FAddOption\u7EC4\u4EF6");
+      return React.createElement("div", null, this.state.error && React.createElement("p", null, this.state.error), React.createElement("form", {
+        onSubmit: this.handleFormSubmit
+      }, React.createElement("input", {
+        type: "text",
+        name: "option"
+      }), React.createElement("button", null, "\u6DFB\u52A0\u9009\u9879")));
     }
   }]);
 
