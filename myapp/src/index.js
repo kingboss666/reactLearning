@@ -1,5 +1,12 @@
+import React from "react"
+import ReactDOM from "react-dom"
+import Header from "./components/Header"
+import Action from "./components/Action"
+import Options from "./components/Options"
+import AddOption from "./components/AddOption"
 // 总组件
-class MyApp extends React.Component {constructor(props) {
+class MyApp extends React.Component {
+    constructor(props) {
         super(props)
         this.handleRemoveAll = this.handleRemoveAll.bind(this)
         this.handlePickOption = this.handlePickOption.bind(this)
@@ -70,88 +77,7 @@ class MyApp extends React.Component {constructor(props) {
 MyApp.defaultProps = {
     options: []
 }
-// 标题
-const Header = (props) => {
-    return (
-        <div>
-            <h1>{props.title}</h1>
-            {props.subTitle && <h2>{props.subTitle}</h2>}
-        </div>
-    )
-}
-Header.defaultProps = {
-    title: "帮你做决定"
-}
-// 随机选项
-const Action = (props) => {
-    return (
-        <div>
-            <button
-                onClick={props.handlePickOption}
-                disabled={!props.hasOptions}>
-                随机输出一个选项
-            </button>
-        </div>
-    )
-}
-// 选项集合
-const Options = (props) => {
-    return (
-        <div>
-            <button onClick={props.handleRemoveAll}>全部删除</button>
-            {props.options.length === 0 && <p>请添加一个选项</p>}
-            {props.options.map((item, index) => {
-                return <Option
-                    option={item}
-                    key={`option_${index}`}
-                    handleRemoveOption={props.handleRemoveOption} />
-            })}
-        </div>
-    )
-}
-// 单个选项
-const Option = (props) => {
-    return (
-        <div>
-            {props.option}
-            <button onClick={() => {
-                props.handleRemoveOption(props.option)
-            }}>删除</button>
-        </div>
-    )
-}
-// 添加选项
-class AddOption extends React.Component {
-    constructor(props) {
-        super(props)
-        this.handleFormSubmit = this.handleFormSubmit.bind(this)
-        this.state = {
-            error: ""
-        }
-    }
-    handleFormSubmit(e) {
-        e.preventDefault()
-        const option = e.target.elements.option.value.trim()
-        const error = this.props.handleAddOption(option)
-        this.setState(() => ({
-            error
-        }))
-        if (!error) {
-            e.target.elements.option.value = ""
-        }
-    }
-    render() {
-        return (
-            <div>
-                {this.state.error && <p>{this.state.error}</p>}
-                <form onSubmit={this.handleFormSubmit}>
-                    <input type="text" name="option" />
-                    <button>添加选项</button>
-                </form>
-            </div>
-        )
-    }
-}
 
-const app = document.getElementById("app")
-ReactDOM.render(<MyApp />, app)
+
+const root = document.getElementById("root")
+ReactDOM.render(<MyApp />, root)

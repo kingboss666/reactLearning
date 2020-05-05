@@ -90,7 +90,6 @@ function (_React$Component) {
         var options = JSON.parse(json);
 
         if (options) {
-          console.log(options);
           this.setState(function () {
             return {
               options: options
