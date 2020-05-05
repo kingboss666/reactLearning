@@ -1,0 +1,18 @@
+html{
+    font-size: 10px;
+}
+
+body{
+    font-family: Helvetica, Arial, sans-serif, "华文细黑", "微软雅黑", "宋体";
+    font-size: $m-size;
+    background-color: $dark-blue;
+}
+
+button{
+    cursor: pointer;
+    outline: none;
+}
+
+button:disabled{
+    cursor: default;
+}

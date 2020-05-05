@@ -2,11 +2,11 @@ import React from "react"
 // 单个选项
 const Option = (props) => {
     return (
-        <div>
-            {props.option}
+        <div className="option">
+            <p className="option__text">{props.count}. {props.option}</p>
             <button onClick={() => {
                 props.handleRemoveOption(props.option)
-            }}>删除</button>
+            }} className="button button--link">remove</button>
         </div>
     )
 }
