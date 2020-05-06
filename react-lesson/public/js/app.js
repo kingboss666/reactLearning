@@ -1,54 +1,66 @@
 "use strict";
 
-console.log("js运行了");
+console.log("js运行了111");
 console.log(React);
 console.log(ReactDOM);
 var obj = {
-  title: "这是APP",
+  title: "帮你决定",
   subtitle: "我是副标题",
-  options: [1]
+  options: []
 };
 
 var showOptions = function showOptions(options) {
   if (options && options.length > 0) {
-    return React.createElement("p", null, "\u8FD9\u662F\u4E00\u4E2Aoptions");
+    return /*#__PURE__*/React.createElement("p", null, "\u8FD9\u662F\u4E00\u4E2Aoptions");
   } else {
-    return React.createElement("p", null, "\u6CA1\u6709\u4E1C\u897F");
+    return /*#__PURE__*/React.createElement("p", null, "\u6CA1\u6709\u4E1C\u897F");
   }
-};
+}; // 添加选项
 
-var template = React.createElement("div", null, React.createElement("h1", null, obj.title), React.createElement("p", null, obj.subtitle), (obj.options && obj.options.length) > 0 && React.createElement("p", null, "\u8FD9\u662F\u4E00\u4E2Aoptions"), showOptions(obj.options), React.createElement("p", null, obj.options && obj.options.length > 0 ? "这是一个options" : "没有东西"), React.createElement("ol", null, React.createElement("li", null, "\u7269\u54C11"), React.createElement("li", null, "\u7269\u54C11")));
-var templateTwo = React.createElement("div", null, React.createElement("h1", null, "\u91D1\u745E"), React.createElement("p", null, "age: 22"), React.createElement("p", null, "location: \u676D\u5DDE"));
-var count = 0;
 
-var countAdd = function countAdd() {
-  count += 1;
-  renderCountApp();
-};
+var fromSubmit = function fromSubmit(e) {
+  e.preventDefault();
+  var option = e.target.elements.option.value;
 
-var countRemove = function countRemove() {
-  count -= 1;
-  renderCountApp();
-};
+  if (option) {
+    obj.options.push(option);
+    e.target.elements.option.value = "";
+    render();
+  }
+}; // 清除所有
 
-var countReset = function countReset() {
-  count = 0;
-  renderCountApp();
-};
 
-var renderCountApp = function renderCountApp() {
-  var templateThree = React.createElement("div", null, React.createElement("p", null, count), React.createElement("button", {
-    className: "button",
-    onClick: countAdd
-  }, "+1"), React.createElement("button", {
-    className: "button",
-    onClick: countRemove
-  }, "-1"), React.createElement("button", {
-    className: "button",
-    onClick: countReset
-  }, "\u91CD\u7F6E"));
+var removeAll = function removeAll() {
+  obj.options = [];
+  render();
+}; // 随机选择一项
+
+
+var makeDecision = function makeDecision() {
+  var index = Math.floor(Math.random() * obj.options.length);
+  var option = obj.options[index];
+  alert(option);
+}; // 渲染
+
+
+var render = function render() {
+  var template = /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, obj.title), /*#__PURE__*/React.createElement("p", null, obj.subtitle), showOptions(obj.options), /*#__PURE__*/React.createElement("p", null, obj.options.length), /*#__PURE__*/React.createElement("button", {
+    onClick: makeDecision,
+    disabled: obj.options.length <= 0
+  }, "\u968F\u673A\u9009\u62E9\u4E00\u9879"), /*#__PURE__*/React.createElement("button", {
+    onClick: removeAll
+  }, "\u5220\u9664\u6240\u6709"), /*#__PURE__*/React.createElement("ol", null, obj.options.map(function (item, index) {
+    return /*#__PURE__*/React.createElement("li", {
+      key: "item".concat(index)
+    }, item);
+  })), /*#__PURE__*/React.createElement("form", {
+    onSubmit: fromSubmit
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "text",
+    name: "option"
+  }), /*#__PURE__*/React.createElement("button", null, "\u6DFB\u52A0\u9009\u9879")));
   var root = document.getElementById("app");
-  ReactDOM.render(templateThree, root);
+  ReactDOM.render(template, root);
 };
 
-renderCountApp();
+render();
