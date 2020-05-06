@@ -1,66 +1,224 @@
 "use strict";
 
-console.log("js运行了111");
-console.log(React);
-console.log(ReactDOM);
-var obj = {
-  title: "帮你决定",
-  subtitle: "我是副标题",
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+// 总组件
+var MyApp =
+/*#__PURE__*/
+function (_React$Component) {
+  _inherits(MyApp, _React$Component);
+
+  function MyApp(props) {
+    var _this;
+
+    _classCallCheck(this, MyApp);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MyApp).call(this, props));
+    _this.handleRemoveAll = _this.handleRemoveAll.bind(_assertThisInitialized(_this));
+    _this.handlePickOption = _this.handlePickOption.bind(_assertThisInitialized(_this));
+    _this.handleAddOption = _this.handleAddOption.bind(_assertThisInitialized(_this));
+    _this.handleRemoveOption = _this.handleRemoveOption.bind(_assertThisInitialized(_this));
+    _this.state = {
+      options: props.options
+    };
+    return _this;
+  }
+
+  _createClass(MyApp, [{
+    key: "handleRemoveAll",
+    value: function handleRemoveAll() {
+      this.setState(function () {
+        return {
+          options: []
+        };
+      });
+    }
+  }, {
+    key: "handlePickOption",
+    value: function handlePickOption() {
+      var index = Math.floor(Math.random() * this.state.options.length);
+      var option = this.state.options[index];
+      alert(option);
+    }
+  }, {
+    key: "handleAddOption",
+    value: function handleAddOption(option) {
+      if (!option) {
+        return "选项不能为空";
+      } else if (this.state.options.includes(option)) {
+        return "不要输入重复的选项";
+      } else {
+        this.setState(function (prevState) {
+          return {
+            options: prevState.options.concat(option)
+          };
+        });
+      }
+    }
+  }, {
+    key: "handleRemoveOption",
+    value: function handleRemoveOption(option) {
+      this.setState(function (prevState) {
+        return {
+          options: prevState.options.filter(function (item) {
+            return item !== option;
+          })
+        };
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      try {
+        var json = localStorage.getItem("options");
+        var options = JSON.parse(json);
+
+        if (options) {
+          this.setState(function () {
+            return {
+              options: options
+            };
+          });
+        }
+      } catch (e) {//什么都不做
+      }
+    }
+  }, {
+    key: "componentDidUpdate",
+    value: function componentDidUpdate(prevProps, prevState) {
+      if (this.state.options.length !== prevState.options.length) {
+        var json = JSON.stringify(this.state.options);
+        localStorage.setItem("options", json);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var subTitle = "把你的命运交给电脑吧";
+      return React.createElement("div", null, React.createElement(Header, {
+        subTitle: subTitle
+      }), React.createElement(Action, {
+        hasOptions: this.state.options.length > 0,
+        handlePickOption: this.handlePickOption
+      }), React.createElement(Options, {
+        options: this.state.options,
+        handleRemoveAll: this.handleRemoveAll,
+        handleRemoveOption: this.handleRemoveOption
+      }), React.createElement(AddOption, {
+        handleAddOption: this.handleAddOption
+      }));
+    }
+  }]);
+
+  return MyApp;
+}(React.Component);
+
+MyApp.defaultProps = {
   options: []
+}; // 标题
+
+var Header = function Header(props) {
+  return React.createElement("div", null, React.createElement("h1", null, props.title), props.subTitle && React.createElement("h2", null, props.subTitle));
 };
 
-var showOptions = function showOptions(options) {
-  if (options && options.length > 0) {
-    return /*#__PURE__*/React.createElement("p", null, "\u8FD9\u662F\u4E00\u4E2Aoptions");
-  } else {
-    return /*#__PURE__*/React.createElement("p", null, "\u6CA1\u6709\u4E1C\u897F");
-  }
+Header.defaultProps = {
+  title: "帮你做决定"
+}; // 随机选项
+
+var Action = function Action(props) {
+  return React.createElement("div", null, React.createElement("button", {
+    onClick: props.handlePickOption,
+    disabled: !props.hasOptions
+  }, "\u968F\u673A\u8F93\u51FA\u4E00\u4E2A\u9009\u9879"));
+}; // 选项集合
+
+
+var Options = function Options(props) {
+  return React.createElement("div", null, React.createElement("button", {
+    onClick: props.handleRemoveAll
+  }, "\u5168\u90E8\u5220\u9664"), props.options.length === 0 && React.createElement("p", null, "\u8BF7\u6DFB\u52A0\u4E00\u4E2A\u9009\u9879"), props.options.map(function (item, index) {
+    return React.createElement(Option, {
+      option: item,
+      key: "option_".concat(index),
+      handleRemoveOption: props.handleRemoveOption
+    });
+  }));
+}; // 单个选项
+
+
+var Option = function Option(props) {
+  return React.createElement("div", null, props.option, React.createElement("button", {
+    onClick: function onClick() {
+      props.handleRemoveOption(props.option);
+    }
+  }, "\u5220\u9664"));
 }; // 添加选项
 
 
-var fromSubmit = function fromSubmit(e) {
-  e.preventDefault();
-  var option = e.target.elements.option.value;
+var AddOption =
+/*#__PURE__*/
+function (_React$Component2) {
+  _inherits(AddOption, _React$Component2);
 
-  if (option) {
-    obj.options.push(option);
-    e.target.elements.option.value = "";
-    render();
+  function AddOption(props) {
+    var _this2;
+
+    _classCallCheck(this, AddOption);
+
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(AddOption).call(this, props));
+    _this2.handleFormSubmit = _this2.handleFormSubmit.bind(_assertThisInitialized(_this2));
+    _this2.state = {
+      error: ""
+    };
+    return _this2;
   }
-}; // 清除所有
 
+  _createClass(AddOption, [{
+    key: "handleFormSubmit",
+    value: function handleFormSubmit(e) {
+      e.preventDefault();
+      var option = e.target.elements.option.value.trim();
+      var error = this.props.handleAddOption(option);
+      this.setState(function () {
+        return {
+          error: error
+        };
+      });
 
-var removeAll = function removeAll() {
-  obj.options = [];
-  render();
-}; // 随机选择一项
+      if (!error) {
+        e.target.elements.option.value = "";
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement("div", null, this.state.error && React.createElement("p", null, this.state.error), React.createElement("form", {
+        onSubmit: this.handleFormSubmit
+      }, React.createElement("input", {
+        type: "text",
+        name: "option"
+      }), React.createElement("button", null, "\u6DFB\u52A0\u9009\u9879")));
+    }
+  }]);
 
+  return AddOption;
+}(React.Component);
 
-var makeDecision = function makeDecision() {
-  var index = Math.floor(Math.random() * obj.options.length);
-  var option = obj.options[index];
-  alert(option);
-}; // 渲染
-
-
-var render = function render() {
-  var template = /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, obj.title), /*#__PURE__*/React.createElement("p", null, obj.subtitle), showOptions(obj.options), /*#__PURE__*/React.createElement("p", null, obj.options.length), /*#__PURE__*/React.createElement("button", {
-    onClick: makeDecision,
-    disabled: obj.options.length <= 0
-  }, "\u968F\u673A\u9009\u62E9\u4E00\u9879"), /*#__PURE__*/React.createElement("button", {
-    onClick: removeAll
-  }, "\u5220\u9664\u6240\u6709"), /*#__PURE__*/React.createElement("ol", null, obj.options.map(function (item, index) {
-    return /*#__PURE__*/React.createElement("li", {
-      key: "item".concat(index)
-    }, item);
-  })), /*#__PURE__*/React.createElement("form", {
-    onSubmit: fromSubmit
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    name: "option"
-  }), /*#__PURE__*/React.createElement("button", null, "\u6DFB\u52A0\u9009\u9879")));
-  var root = document.getElementById("app");
-  ReactDOM.render(template, root);
-};
-
-render();
+var app = document.getElementById("app");
+ReactDOM.render(React.createElement(MyApp, null), app);
