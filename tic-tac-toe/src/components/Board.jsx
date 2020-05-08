@@ -1,51 +1,33 @@
 import React from "react"
 import Square from "./Square"
-class Board extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      squares: Array(9).fill(null),
-      xIsNext: "X"
-    }
-  }
-  handleClick(i){
-    const squares = this.state.squares.slice()
-    squares[i] = this.state.xIsNext ? "X" : "O"
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext
-    })
-  }
-  renderSquare(i) {
-    return (
-      <Square 
-        value={this.state.squares[i]}
-        onClick={()=>{this.handleClick(i)}}
+
+const renderSquare = (props,i) => {
+  return (
+    <Square
+        value={props.squares[i]}
+        onClick={() => {props.onClick(i) }}
       />
-    );
-  }
-  render() {
-    const status = 'Next player ' + (this.state.xIsNext ? "X" : "O");
-    return (
-      <div>
-        <div className="status">{status}</div>
+  )
+}
+const Board = props => {
+  return (
+    <div>
         <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
+          {renderSquare(props,0)}
+          {renderSquare(props,1)}
+          {renderSquare(props,2)}
         </div>
         <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
+          {renderSquare(props,3)}
+          {renderSquare(props,4)}
+          {renderSquare(props,5)}
         </div>
         <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
+          {renderSquare(props,6)}
+          {renderSquare(props,7)}
+          {renderSquare(props,8)}
         </div>
       </div>
-    );
-  }
+  )
 }
 export default Board
